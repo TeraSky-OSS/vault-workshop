@@ -190,4 +190,4 @@ After successful authentication, Vault will return a token that can be used to i
 In this section, we have covered the process of configuring and logging in with four different authentication methods in Vault: AppRole, Token, LDAP, and Kubernetes. Each method has its specific use cases, and you can use the method that best fits your needs for managing access to Vault.
 
 
-Next: [Use Vault KV Secret Engine](./tasks/03-vault-secrets-kv.md)
+Next: [Use Vault KV Secret Engine](./03-vault-secrets-kv.md)

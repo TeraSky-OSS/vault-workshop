@@ -92,4 +92,4 @@ vault token login $(jq -r ".root_token" cluster-keys.json)
 
 ---
 
-Next: [Configure Vault Auth Methods](./tasks/02-vault-auth-methods.md)
+Next: [Configure Vault Auth Methods](./02-vault-auth-methods.md)

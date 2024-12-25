@@ -152,4 +152,4 @@ In this section, we will configure the **Database Secret Engine** in Vault to dy
 
 In this section, we deployed PostgreSQL and MongoDB on Minikube and configured the Vault Database Secret Engine to dynamically generate credentials for both databases. These credentials can now be used by applications to securely access the databases.
 
-Next: [Vault Manual Snapshot](./tasks/06-vault-manual-backup.md)
+Next: [Vault Manual Snapshot](./06-vault-manual-backup.md)

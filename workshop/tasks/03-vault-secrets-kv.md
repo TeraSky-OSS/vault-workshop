@@ -122,4 +122,4 @@ vault kv destroy -versions=1 kv-v2/my-secret
 
 In this section, we have explored both **KV Version 1** and **KV Version 2**, highlighting their differences and providing step-by-step tasks to enable, use, and manage secrets. KV Version 1 is suitable for simple use cases, while KV Version 2 provides advanced features like versioning and recovery.
 
-Next: [Create Vault Policies](./tasks/04-vault-policies.md)
+Next: [Create Vault Policies](./04-vault-policies.md)

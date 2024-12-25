@@ -162,4 +162,4 @@ Before we create policies, let's enable the KV v2 secrets engine and store some 
 
 In this section, we explored how to define and configure Vault policies, generate tokens with specific policies, and test their access to Vault resources. By using these policies, we can control who can access and modify secrets in Vault, ensuring that sensitive data is protected based on the principle of least privilege.
 
-Next: [Use Vault Database Secret Engine](./tasks/05-vault-secrets-database.md)
+Next: [Use Vault Database Secret Engine](./05-vault-secrets-database.md)
