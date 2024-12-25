@@ -79,4 +79,4 @@ In this section, we will create a manual snapshot of the Vault data, simulate a 
 
 In this section, we successfully created a manual snapshot of the Vault data, simulated a data loss by deleting the Vault data in kubernetes, and restored the Vault using the snapshot. This process ensures that you can recover your Vault data in case of unexpected failures.
 
-Next: [Cleanup](./tasks/cleanup)
+Next: [Cleanup](./cleanup)
