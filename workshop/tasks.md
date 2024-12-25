@@ -22,7 +22,6 @@ This workshop is structured into multiple topics, each covering different aspect
 - **KV Secrets – v1 and v2** (Hands-On)
 - **Dynamic Secrets**:
   - Database (Postgres, Mongo) (Hands-On)
-  - Cloud Account - AWS (Hands-On)
   - SSH Keys (Demo)
   - LDAP (Demo)
   - Kubernetes Secrets Engine (Demo)
