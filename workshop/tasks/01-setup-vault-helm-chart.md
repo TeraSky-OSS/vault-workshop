@@ -26,7 +26,7 @@ helm show values hashicorp/vault --version 0.28.0 > values.yaml
 The Vault cluster should have the following configurations:
 * Standalone Vault: Configure Vault to run as a standalone instance, without HA.
 * Raft Storage Backend: Enable the Raft storage backend.
-* Configure Vault to use TLS for secure communication. You will need to provide your own certificates or enable auto-generation of certificates (use the example [here](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls)).
+* Configure Vault to use TLS for secure communication. You will need to provide your own certificates or enable auto-generation of certificates (use the example [here](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls#install-the-vault-helm-chart)).
 * Enable the Vault web UI for easier management and configuration.
 * Configure Kubernetes liveness and readiness probes to ensure Vault's health status is properly monitored
 * Set resource requests and limits for Vault to ensure it has enough resources to run efficiently and prevent over-provisioning.
