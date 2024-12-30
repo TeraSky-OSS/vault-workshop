@@ -1,31 +1,3 @@
-
-
-function init_variales(){
-    VAR_PATH=$1
-    cd $SCRIPT_PATH/$VAR_PATH
-
-    #VAR_PATH=poc-test/dynamic-provision
-    WORKER_LABEL=node-role.kubernetes.io/worker=
-    MASTER_LABEL=node-role.kubernetes.io/master=
-    DEOPLOY_PATH=deployment.yaml
-    PVC_PATH=pvc.yaml
-    DEPLOY_JSON=$(cat $DEOPLOY_PATH | yq e  -P -o json)
-    DEPLOY_KEY_LABEL_NAME=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("Deployment")) | .spec.template.metadata.labels | keys[0]' | tr -d \")
-    DEPLOY_VALUE_LABEL_NAME=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("Deployment")) | .spec.template.metadata.labels.'$DEPLOY_KEY_LABEL_NAME | tr -d \" )
-    DEPLOY_LABEL=$(echo "$DEPLOY_KEY_LABEL_NAME=$DEPLOY_VALUE_LABEL_NAME")
-    SC_PATH=storage-class.yaml
-    SC_JSON=$(cat $SC_PATH | yq e  -P -o json)
-    SC_NAME=$(echo $SC_JSON | jq '.metadata.name' | tr -d \")
-    NGINX_NS=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("Deployment")) | .metadata.namespace' | tr -d \")
-    NGINX_REPL=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("Deployment")) | .spec.replicas')
-    NGINX_STORAGE=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("PersistentVolumeClaim")) | .spec.resources.requests.storage' | tr -d \")
-    NGINX_PVC_NAME=$(yq '.metadata.name' $PVC_PATH)  
-    PVC_KEY_LABEL_NAME=$(yq  '.metadata.labels[] | key'  $PVC_PATH )
-    PVC_VALUE_LABEL_NAME=$( yq  '.metadata.labels[]'  $PVC_PATH)
-    PVC_LABEL=$(echo "$PVC_KEY_LABEL_NAME=$PVC_VALUE_LABEL_NAME")
-    #NGINX_PVC_NAME=$(echo $DEPLOY_JSON | jq '. | select(.kind|test("PersistentVolumeClaim")) | .metadata.name' | tr -d \")
-    SC_REPL=$(echo $SC_JSON | jq '.parameters.repl' | tr -d \")
-}
 function create_kubeconfig(){
 FILE=~/.kube/config
 if [[  -f "$FILE" ]]; then
@@ -98,11 +70,12 @@ function clear_all_resources() {
 }
 function wait_for_pod_by_label(){
     LABEL=$1
+    NS=$2
+    [[ -z $NS ]] && NS=default
     sleep 2 &>/dev/null
-    POD=$(kubectl get pod -n $NGINX_NS  -l $LABEL -o name)
+    POD=$(kubectl get pod -n $NS  -l $LABEL -o name)
     p "#We need to wait for pod: '$POD' to be up and running"
-    # pe "kubectl wait --for=condition=Ready -n $NGINX_NS pod -l $LABEL --timeout 5m"
-    kubectl wait --for=condition=Ready -n $NGINX_NS pod -l $LABEL --timeout 5m &>/dev/null
+    kubectl wait --for=condition=Ready -n $NS pod -l $LABEL --timeout 5m &>/dev/null
     p "#pod $POD is ready..."  
 }
 function check_requirments() {

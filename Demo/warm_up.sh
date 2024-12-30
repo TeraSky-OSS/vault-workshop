@@ -13,10 +13,11 @@ DEMO_PROMPT="${GREEN}➜ ${CYAN}"
 clear
 
 p "Setting up Vault Cluster..."
-kubectl create secret generic vault-enterprise-license --from-file=license=vault.hclic --namespace vault
+kubectl create ns vault
+kubectl create secret generic --force vault-enterprise-license --from-file=license=vault.hclic --namespace vault
 helm upgrade -i vault hashicorp/vault --version 0.28.0 -f vault-values.yaml --namespace vault --create-namespace
 
-wait_for_pod_by_label "statefulset.kubernetes.io/pod-name=vault-0"
+wait_for_pod_by_label "statefulset.kubernetes.io/pod-name=vault-0" "vault"
 
 
 p "Initializing Vault..."
