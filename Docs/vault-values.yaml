@@ -76,72 +76,88 @@ server:
    # no arguments are given to helm. This requires a PVC for data storage to use
    # the "file" backend.  This mode is not highly available and should not be scaled
    # past a single replica.
-   standalone:
-      enabled: true
+   # standalone:
+   #    enabled: false
 
-      # config is a raw string of default configuration when using a Stateful
-      # deployment. Default is to use a PersistentVolumeClaim mounted at /vault/data
-      # and store data there. This is only used when using a Replica count of 1, and
-      # using a stateful set. This should be HCL.
+   #    # config is a raw string of default configuration when using a Stateful
+   #    # deployment. Default is to use a PersistentVolumeClaim mounted at /vault/data
+   #    # and store data there. This is only used when using a Replica count of 1, and
+   #    # using a stateful set. This should be HCL.
 
-      # Note: Configuration files are stored in ConfigMaps so sensitive data
-      # such as passwords should be either mounted through extraSecretEnvironmentVars
-      # or through a Kube secret.  For more information see:
-      # https://developer.hashicorp.com/vault/docs/platform/k8s/helm/run#protecting-sensitive-vault-configurations
-      config: |
-         ui = true
-         disable_mlock = true
-         cluster_name = "vault-integrated-storage"
+   #    # Note: Configuration files are stored in ConfigMaps so sensitive data
+   #    # such as passwords should be either mounted through extraSecretEnvironmentVars
+   #    # or through a Kube secret.  For more information see:
+   #    # https://developer.hashicorp.com/vault/docs/platform/k8s/helm/run#protecting-sensitive-vault-configurations
+   #    config: |
+   #       ui = true
+   #       disable_mlock = true
+   #       cluster_name = "vault-integrated-storage"
 
-         listener "tcp" {
-            tls_disable = 0
-            address = "[::]:8200"
-            cluster_address = "[::]:8201"
+   #       listener "tcp" {
+   #          tls_disable = 0
+   #          address = "[::]:8200"
+   #          cluster_address = "[::]:8201"
             
-            tls_cert_file = "/vault/userconfig/vault-ha-tls/vault.crt"
-            tls_key_file  = "/vault/userconfig/vault-ha-tls/vault.key"
-            tls_client_ca_file = "/vault/userconfig/vault-ha-tls/vault.ca"
+   #          tls_cert_file = "/vault/userconfig/vault-ha-tls/vault.crt"
+   #          tls_key_file  = "/vault/userconfig/vault-ha-tls/vault.key"
+   #          tls_client_ca_file = "/vault/userconfig/vault-ha-tls/vault.ca"
 
-            # Enable unauthenticated metrics access (necessary for Prometheus Operator)
-            telemetry {
-             unauthenticated_metrics_access = "true"
-            }
-         }
+   #          # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+   #          telemetry {
+   #           unauthenticated_metrics_access = "true"
+   #          }
+   #       }
 
-         storage "file" {
-            path = "/vault/data"
-         }
+   #       storage "file" {
+   #          path = "/vault/data"
+   #       }
 
-         service_registration "kubernetes" {}
-
-         # Configuration for enabling Prometheus metrics in your config.
-         telemetry {
-          prometheus_retention_time = "30s"
-          disable_hostname = true
-         }
+   #       # Configuration for enabling Prometheus metrics in your config.
+   #       telemetry {
+   #        prometheus_retention_time = "30s"
+   #        disable_hostname = true
+   #       }
 
    # Run Vault in "HA" mode. There are no storage requirements unless the audit log
    # persistence is required.  In HA mode Vault will configure itself to use Consul
    # for its storage backend.  The default configuration provided will work the Consul
    # Helm project by default.  It is possible to manually configure Vault to use a
    # different HA backend.
-   # ha:
-   #    enabled: false
-   #    raft: 
-   #       enabled: true
-   #       setNodeId: true
-   #       config: |
-   #          cluster_name = "vault-integrated-storage"
-   #          storage "raft" {
-   #             path    = "/vault/data/"
-   #          }
+   ha:
+      enabled: true
+      replicas: 1
+      raft: 
+         enabled: true
+         setNodeId: true
+         config: |
+            cluster_name = "vault-integrated-storage"
+            disable_mlock = true
 
-   #          listener "tcp" {
-   #             address = "[::]:8200"
-   #             cluster_address = "[::]:8201"
-   #             tls_disable = "true"
-   #          }
+            storage "raft" {
+               path    = "/vault/data/"
+            }
+
+            listener "tcp" {
+               tls_disable = 0
+               address = "[::]:8200"
+               cluster_address = "[::]:8201"
+               
+               tls_cert_file = "/vault/userconfig/vault-ha-tls/vault.crt"
+               tls_key_file  = "/vault/userconfig/vault-ha-tls/vault.key"
+               tls_client_ca_file = "/vault/userconfig/vault-ha-tls/vault.ca"
+
+               # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+               telemetry {
+               unauthenticated_metrics_access = "true"
+               }
+            }
             
-   #          service_registration "kubernetes" {}
+            service_registration "kubernetes" {}
 
-   #          ui = true
+            ui = true
+
+            # Configuration for enabling Prometheus metrics in your config.
+            telemetry {
+               prometheus_retention_time = "30s"
+               disable_hostname = true
+            }

@@ -47,6 +47,13 @@ Delete the secret.
 vault kv delete kv-v1/my-secret
 ```
 
+#### 5. **Verify KV secret deletation**
+Verify that there is no secret.
+
+```bash
+vault kv get kv-v1/my-secret
+```
+
 ---
 
 ### **KV Version 2**
@@ -64,56 +71,58 @@ vault secrets enable -path=kv2 -version=2 kv
 Store a secret (key-value pair) in the KV store. This automatically creates version 1 of the secret.
 
 ```bash
-vault kv put kv-v2/my-secret username="admin" password="password123"
+vault kv put kv2/my-secret username="admin" password="password123"
 ```
 
 #### 3. **Read Secrets from KV Version 2**
 Retrieve the latest version of the secret.
 
 ```bash
-vault kv get kv-v2/my-secret
+vault kv get kv2/my-secret
 ```
 
 #### 4. **Rewrite Secrets to KV Version 2**
 Store a secret (key-value pair) in the KV store. This automatically creates version 1 of the secret.
 
 ```bash
-vault kv put kv-v2/my-secret username="admin" password="differentpassword123"
+vault kv put kv2/my-secret username="admin" password="differentpassword123"
 ```
 
 #### 5. **Read again Secrets from KV Version 2**
 Retrieve the latest version of the secret.
 
 ```bash
-vault kv get kv-v2/my-secret
+vault kv get kv2/my-secret
 ```
 
 #### 6. **Read a Specific Version of a Secret**
 Retrieve a specific version of the secret.
 
 ```bash
-vault kv get -version=<version_of_wanted_secret> kv-v2/my-secret
+vault kv get -version=1 kv2/my-secret
+# Or
+vault kv get -version=2 kv2/my-secret
 ```
 
 #### 7. **Delete Secrets from KV Version 2**
 Delete a specific version of the secret.
 
 ```bash
-vault kv delete kv-v2/my-secret
+vault kv delete kv2/my-secret
 ```
 
 #### 8. **Undelete or Recover Secrets**
 Recover a deleted version of the secret.
 
 ```bash
-vault kv undelete -versions=1 kv-v2/my-secret
+vault kv undelete -versions=1 kv2/my-secret
 ```
 
 #### 9. **Permanently Destroy Secrets**
 Permanently delete a version of the secret.
 
 ```bash
-vault kv destroy -versions=1 kv-v2/my-secret
+vault kv destroy -versions=1 kv2/my-secret
 ```
 
 ---
