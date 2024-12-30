@@ -132,6 +132,12 @@ Before we create policies, let's enable the KV v2 secrets engine and store some 
      ```
      This should succeed because the `readwrite` policy allows creating, updating, and deleting secrets.
 
+   - Attempt to perform an admin operation, such as enabling a new secret engine:
+     ```bash
+     vault secrets enable -path=my-secrets kv
+     ```
+     This should fail because `readwrite` policy lacks `sudo` capabilities.
+
 3. **Login with the `admin` token**:
    ```bash
    vault login <admin-token>

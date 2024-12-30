@@ -44,6 +44,12 @@ helm upgrade -i vault hashicorp/vault --version 0.28.0 -f vault-values.yaml --na
 
 Once Vault is deployed, you need to initialize it. This step is required to set up the Vault server with the initial keys and unseal it.
 
+```bash
+kubectl exec -it vault-0 -- vault status
+```
+> **Note**: As you can see Vault is not yet initialize and is sealed
+
+
 Run the following command to initialize Vault:
 
 ```bash
@@ -56,6 +62,15 @@ kubectl exec vault-0 -- vault operator init \
 This command will output the unseal keys and the root token into a file named `cluster-keys.json`.
 
 > **Note**: Do not run an unsealed Vault in production with a single key share and a single key threshold. This approach is only used here to simplify the unsealing process for Hands On.
+
+
+After Initializing:
+
+```bash
+kubectl exec -it vault-0 -- vault status
+```
+> **Note**: Now Vault is initialized, but still needs to be unsealed
+
 
 ### 5. **Unseal Vault**
 
@@ -72,8 +87,14 @@ Now that Vault is initialized and unsealed, set the Vault address to the service
 
 Run the following command in your terminal to export the Vault address:
 
+In another terminal start port forwarding
 ```bash
-export VAULT_ADDR="http://vault.vault.svc.cluster.local:8200"
+kubectl port-forward svc/vault 8200:8200
+```
+
+```bash
+export VAULT_ADDR="https://127.0.0.1:8200"
+export VAULT_SKIP_VERIFY="true"
 ```
 
 > **Note**: This command sets the `VAULT_ADDR` environment variable to the Vault service's address in your Kubernetes cluster. You can now interact with Vault using the Vault CLI.
@@ -86,7 +107,7 @@ vault status
 ```
 
 ```bash
-vault token login $(jq -r ".root_token" cluster-keys.json)
+vault login $(jq -r ".root_token" cluster-keys.json)
 ```
 
 
